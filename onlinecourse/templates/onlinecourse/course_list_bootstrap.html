@@ -2,64 +2,376 @@
 <html lang="en">
 <head>
     {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <meta charset="UTF-8">
-    <title>Online Courses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telecom Employee Learning Portal</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #sidebar {
+            min-height: 100vh;
+            background-color: #2c3e50;
+            color: white;
+            transition: all 0.3s;
+        }
+        #sidebar .nav-link {
+            color: #bdc3c7;
+            padding: 15px 20px;
+            border-bottom: 1px solid #34495e;
+        }
+        #sidebar .nav-link:hover {
+            background-color: #34495e;
+            color: white;
+        }
+        #sidebar .nav-link.active {
+            background-color: #1abc9c;
+            color: white;
+        }
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background-color: #1abc9c;
+            text-align: center;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .summary-card {
+            transition: transform 0.2s;
+        }
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .btn-telecom {
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+        }
+        .btn-telecom:hover {
+            background-color: #16a085;
+            color: white;
+        }
+        .announcement-card {
+            background-color: #e8f8f5;
+            border-left: 5px solid #1abc9c;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation bar -->
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                  <a class="navbar-brand" href="#">Online Course</a>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                <li>
-                    <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
-                    <a class="btn btn-link" href="{% url 'onlinecourse:logout' %}">Logout</a>
-                </li>
-                {% else %}
-                <li>
-                    <form class="form-inline" action="{% url 'onlinecourse:login' %}" method="post">
-                        {% csrf_token %}
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Username" name="username" >
-                            <input type="password" class="form-control" placeholder="Username" name="psw" >
-                            <button class="btn btn-primary" type="submit">Login</button>
-                            <a class="btn btn-link" href="{% url 'onlinecourse:registration' %}">Sign Up</a>
-                        </div>
-                    </form>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
 
-    <!-- Page content -->
-    {% if course_list %}
-        <div class="container">
-            <div class="card-deck">
-                {% for course in course_list %}
-                         <div class="card" style="width: 36rem;">
-                          <img class="card-img-left" src="{{MEDIA_URL}}/{{ course.image }}" width="240px" height="240px"
-                               alt="Course image">
-                          <div class="card-body bg-light">
-                              <h5 class="card-title">{{ course.name }}, <span class="text-success">
-                                  {{ course.total_enrollment}} enrolled</span></h5>
-                            <p class="card-text">{{ course.description}}</p>
-                            <form action="{% url 'onlinecourse:enroll' course.id %}" method="post">
-                                  {% csrf_token %}
-                                  <input class="btn btn-primary"  type="submit"
-                                         value="{% if course.is_enrolled %}Enter{% else %}Enroll{% endif %} ">
-                            </form>
-                          </div>
-                        </div>
-                {% endfor %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <div class="sidebar-header">
+                <h5>Telecom Portal</h5>
             </div>
-        </div>
-    {% else %}
-        <p>No courses are available.</p>
-    {% endif %}
+            <div class="sidebar-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-book mr-2"></i> Training Programs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-graduation-cap mr-2"></i> My Learning
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-file-alt mr-2"></i> Assessments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-certificate mr-2"></i> Certificates
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-user mr-2"></i> Profile
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 main-content">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4">
+                <span class="navbar-brand">Learning Dashboard</span>
+                <div class="ml-auto d-flex align-items-center">
+                    {% if user.is_authenticated %}
+                        <span class="mr-3 text-muted">Welcome, {{ user.first_name|default:user.username }}</span>
+                        <a class="btn btn-outline-danger btn-sm" href="{% url 'onlinecourse:logout' %}">Logout</a>
+                    {% else %}
+                        <form class="form-inline" action="{% url 'onlinecourse:login' %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" class="form-control form-control-sm mr-2" placeholder="Username" name="username">
+                            <input type="password" class="form-control form-control-sm mr-2" placeholder="Password" name="psw">
+                            <button class="btn btn-primary btn-sm" type="submit">Login</button>
+                            <a class="btn btn-link btn-sm" href="{% url 'onlinecourse:registration' %}">Sign Up</a>
+                        </form>
+                    {% endif %}
+                </div>
+            </nav>
+
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card p-4 bg-white">
+                        <h2 class="font-weight-light">Welcome back, {{ user.first_name|default:"Employee" }}!</h2>
+                        <p class="text-muted">Stay ahead of the curve with our latest telecom engineering and operations training modules.</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <div class="flex-grow-1 mr-4">
+                                <strong>Overall Learning Progress: 68%</strong>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 68%" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-telecom px-4">Continue Training</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card summary-card text-center p-3">
+                        <h3 class="text-primary">12</h3>
+                        <span class="text-muted small text-uppercase">Training Programs</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card summary-card text-center p-3">
+                        <h3 class="text-success">8</h3>
+                        <span class="text-muted small text-uppercase">Assessments Completed</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card summary-card text-center p-3">
+                        <h3 class="text-warning">3</h3>
+                        <span class="text-muted small text-uppercase">Pending Assessments</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card summary-card text-center p-3">
+                        <h3 class="text-info">5</h3>
+                        <span class="text-muted small text-uppercase">Certifications Earned</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-lg-8">
+                    <!-- Mandatory Training Section -->
+                    <div class="card">
+                        <div class="card-header bg-white font-weight-bold">
+                            Mandatory Training
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div>
+                                        <h6 class="mb-0">Telecom Compliance & Ethics 2026</h6>
+                                        <small class="text-danger">Due in 5 days</small>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">Start</button>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <div>
+                                        <h6 class="mb-0">Customer Data Protection (GDPR for Telecom)</h6>
+                                        <small class="text-muted">Annual Refresher</small>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">Start</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Training Programs -->
+                    <div class="card">
+                        <div class="card-header bg-white font-weight-bold">
+                            Recommended Training Programs
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="mb-2">5G Infrastructure Fundamentals</h6>
+                                        <p class="small text-muted mb-3">Deep dive into 5G core network architecture and radio access technologies.</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge badge-light text-primary">Technical</span>
+                                            <button class="btn btn-sm btn-telecom">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="mb-2">Network Operations Center (NOC) Basics</h6>
+                                        <p class="small text-muted mb-3">Essential skills for real-time network monitoring and fault management.</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge badge-light text-primary">Operations</span>
+                                            <button class="btn btn-sm btn-telecom">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="mb-2">Fiber Optic Maintenance</h6>
+                                        <p class="small text-muted mb-3">Advanced techniques for fiber splicing, testing, and troubleshooting.</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge badge-light text-primary">Infrastructure</span>
+                                            <button class="btn btn-sm btn-telecom">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6 class="mb-2">Cloud Network Monitoring</h6>
+                                        <p class="small text-muted mb-3">Utilizing cloud-native tools for large scale network performance tracking.</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge badge-light text-primary">Cloud</span>
+                                            <button class="btn btn-sm btn-telecom">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Course List (Integrated) -->
+                    <div class="card">
+                        <div class="card-header bg-white font-weight-bold">
+                            Available Courses
+                        </div>
+                        <div class="card-body">
+                            {% if course_list %}
+                                <div class="row">
+                                    {% for course in course_list %}
+                                        <div class="col-md-12 mb-3">
+                                            <div class="card flex-row align-items-center p-0 overflow-hidden">
+                                                <img src="{{MEDIA_URL}}/{{ course.image }}" style="width: 120px; height: 120px; object-fit: cover;" alt="Course image">
+                                                <div class="card-body">
+                                                    <h6 class="card-title mb-1">{{ course.name }}</h6>
+                                                    <p class="card-text small text-muted mb-2">{{ course.description|truncatewords:20 }}</p>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span class="small text-success font-weight-bold">{{ course.total_enrollment }} enrolled</span>
+                                                        <form action="{% url 'onlinecourse:enroll' course.id %}" method="post">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-sm btn-primary">
+                                                                {% if course.is_enrolled %}Enter{% else %}Enroll{% endif %}
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p>No additional courses available at this time.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-lg-4">
+                    <!-- Company Announcement -->
+                    <div class="card announcement-card p-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-bullhorn text-teal mr-2"></i>
+                            <h6 class="mb-0 font-weight-bold">System Update</h6>
+                        </div>
+                        <p class="small mb-0">Scheduled maintenance for the Network Monitoring Dashboard on Sunday, 02:00 AM - 04:00 AM GMT.</p>
+                    </div>
+
+                    <!-- Recent Learning Activity -->
+                    <div class="card">
+                        <div class="card-header bg-white font-weight-bold">
+                            Recent Learning Activity
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush small">
+                                <li class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <span class="font-weight-bold">Completed Assessment</span>
+                                        <small class="text-muted">2h ago</small>
+                                    </div>
+                                    <p class="mb-0">IP Networking Fundamentals</p>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <span class="font-weight-bold">Enrolled in Course</span>
+                                        <small class="text-muted">Yesterday</small>
+                                    </div>
+                                    <p class="mb-0">5G Core Network Overview</p>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <span class="font-weight-bold">Earned Certificate</span>
+                                        <small class="text-muted">3 days ago</small>
+                                    </div>
+                                    <p class="mb-0">Network Security Essentials</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Profile Quick View (Optional but fits Sidebar context) -->
+                    <div class="card text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-user-circle fa-4x text-muted"></i>
+                        </div>
+                        <h5 class="mb-0">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p class="text-muted small">Senior Network Engineer</p>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6 border-right">
+                                <h6 class="mb-0 font-weight-bold">120h</h6>
+                                <small class="text-muted">Learned</small>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="mb-0 font-weight-bold">15</h6>
+                                <small class="text-muted">Courses</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
