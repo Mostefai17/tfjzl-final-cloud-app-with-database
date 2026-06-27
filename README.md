@@ -1,15 +1,20 @@
 
-**General Notes**
+**Django Telecom Training Platform**
 
-An `onlinecourse` app has already been provided in this repo upon which you will be adding a new assesement feature.
+Training platform with MVT architecture designed for companies employees to learn new stuff and enhance their career .
 
-- If you want to develop the final project on Theia hosted by [IBM Developer Skills Network](https://labs.cognitiveclass.ai/), you will need to create the same project structure on Theia workspace and save it everytime you close the browser
-- Or you could develop the final project locally by setting up your own Python runtime and IDE
-- Hints for the final project are left on source code files
-- You may choose any cloud platform for deployment (default is IBM Cloud Foundry)
-- Depends on your deployment, you may choose any SQL database Django supported such as SQLite3, PostgreSQL, and MySQL (default is SQLite3)
 
-**ER Diagram**
-For your reference, we have prepared the ER diagram design for the new assesement feature.
+<img width="1920" height="1080" alt="Screenshot from 2026-06-27 12-40-33" src="https://github.com/user-attachments/assets/9d866e57-9a21-4b15-8b46-6f076780b40e" />
+!<img width="1920" height="1080" alt="Screenshot from 2026-06-27 12-40-50" src="https://github.com/user-attachments/assets/d1c356f4-5ce8-469d-9417-84b5a3b5df64" />
+<img width="1920" height="1080" alt="Screenshot from 2026-06-27 12-40-33" src="https://github.com/user-attachments/assets/bdb64937-766c-4162-9222-58b2d18c3466" />
+<img width="1920" height="1080" alt="Screenshot from 2026-06-27 12-39-54" src="https://github.com/user-attachments/assets/a886dc9a-bf66-4080-b028-266f3a290179" />
 
-![Onlinecourse ER Diagram](https://github.com/ibm-developer-skills-network/final-cloud-app-with-database/blob/master/static/media/course_images/onlinecourse_app_er.png)
+## Features
+
+✓ Employee authentication
+
+✓ Training programs
+
+✓ Online assessments
+
+✓ Automatic grading
