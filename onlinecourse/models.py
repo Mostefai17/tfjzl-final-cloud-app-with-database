@@ -95,7 +95,7 @@ class Enrollment(models.Model):
     rating = models.FloatField(default=5.0)
 
 #Question Model
-class Qustions(models.Model):
+class Questions(models.Model):
     qustion = models.ForeignKey(Course, on_delete=models.CASCADE),
     content = models.CharField(max_length=200)
     grades = models.IntegerField(default=50)
@@ -113,13 +113,13 @@ class Qustions(models.Model):
         else:
             return False
 
-#Choice Model
-class Choice(models.Model):
-    question = models.ForeignKey(Qustions, on_delete=models.CASCADE)
+#Choices Model
+class Choices(models.Model):
+    question = models.ForeignKey(Questions, on_delete=models.CASCADE)
     choiches = models.CharField(max_length=200)
     is_correct = models.BooleanField(default=False)
 
 #Submission Model
 class Submission(models.Model):
     enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-    choices = models.ManyToManyField(Choice)
+    choices = models.ManyToManyField(Choices)
